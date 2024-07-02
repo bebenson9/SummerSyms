@@ -18,6 +18,7 @@ fvfm<-setDT(pam)[, list(fvfm=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)), se=(sd(f
 fvfm$temp <- as.factor(fvfm$temp)
 
 
+
 # plot all the data to look at the spread of fvfm values across ambient and heated treatments 
 fvfm %>%
   ggplot(aes(x = temp, y = fvfm, color = temp, fill = temp))+
@@ -43,3 +44,16 @@ pam %>%
   scale_fill_aaas(alpha = 0.2)+
   theme_bw()
   
+
+# PAM by colony stuff
+pam$colony.id <- factor(pam$colony.id, levels=c('JH01','JH02','JH03','JH04','JH05','JH06','JH07','JH08','JH09','JH10','JH11','JH12','JH13','JH14','JH15','JH16','JH17','JH18','JH19','JH20','JH21','JH22','JH23','JH24','JH25','JH26','JH27','JH28','JH29','JH30','JH31','JH32','JH33','JH34','JH35','JH36'))
+fvfm.avg <- setDT(pam)[, list(fvfm.avg=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)),se=(sd(fv.fm)/sqrt(4))), by=list(colony.id,temp)]
+
+pam %>%
+  filter(colony.id == 'JH01') %>%
+  ggplot(aes(x = temp, y = fv.fm, color = temp,fill = temp))+
+  geom_point(size=0.8)+
+  geom_boxplot()+
+  scale_color_aaas()+
+  scale_fill_aaas(alpha = 0.2)+
+  theme_bw()
