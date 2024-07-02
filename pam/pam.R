@@ -45,8 +45,8 @@ pam %>%
   theme_bw()
   
 
-# PAM by colony stuff <<--- this first part might not work with all the colony IDs, im not sure how to make all the levels without entering all possible colony IDs manually (or is that the solution)
-pam$colony.id <- factor(pam$colony.id, levels=c('JH01','JH02','JH03','JH04','JH05','JH06','JH07','JH08','JH09','JH10','JH11','JH12','JH13','JH14','JH15','JH16','JH17','JH18','JH19','JH20','JH21','JH22','JH23','JH24','JH25','JH26','JH27','JH28','JH29','JH30','JH31','JH32','JH33','JH34','JH35','JH36'))
+# PAM by colony stuff 
+pam$colony.id <- factor(pam$colony.id[1:3864])
 fvfm.avg <- setDT(pam)[, list(fvfm.avg=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)),se=(sd(fv.fm)/sqrt(4))), by=list(colony.id,temp)]
 
 pam %>%
