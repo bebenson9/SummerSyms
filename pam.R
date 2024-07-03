@@ -9,7 +9,7 @@ pam <- read.csv('pam.csv')
 # change from temp numeric to factor
 pam$temp <- as.factor(pam$temp)
 # change frag id from numeric to factor and reorder the frag.id values so that they group by treatment temperature in plots 
-pam$frag.id <- factor(pam$frag.id, levels=c('A','B','F',('G','C','D','E','H'))
+pam$frag.id <- factor(pam$frag.id, levels=c('A','B','F','G','C','D','E','H'))
 
 # obtain average values of fvfm for each nubbin (from the 3 technical replicates/measurements per nub) as well as the range of those values and the standard error 
 fvfm<-setDT(pam)[, list(fvfm=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)), se=(sd(fv.fm)/sqrt(3))), by=list(colony.id, frag.id, temp)]
