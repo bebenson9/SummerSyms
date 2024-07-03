@@ -35,7 +35,7 @@ str(L.chl)
 # then merge the data sets 
 # try the merge() function. type ?merge in the console for information about the function and what goes into it (i.e., the 'arguments')
 # Note - I noticed a typo in the absorbance column header in Lainie's data sheet; you will need to correct that before attempting to merge the data sets
-#G.chl <- read.csv(...)
+G.chl <- read.csv("Chl_tables.csv")
 
 # separate wavelengths 
 sixfournine <- filter(L.chl,wavelength==649)
