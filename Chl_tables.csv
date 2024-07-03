@@ -1,4 +1,4 @@
-person,date,plate,wavelength,coral,well,replicate,aborbance,notes
+person,date,plate,wavelength,coral,well,replicate,absorbance,notes
 Gil,6/26/2024,1,632,blank,A1,1,0.113,
 Gil,6/26/2024,1,632,JH01A,B1,1,0.213,
 Gil,6/26/2024,1,632,JH01C,C1,1,0.136,
