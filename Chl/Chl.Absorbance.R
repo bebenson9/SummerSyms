@@ -9,7 +9,7 @@ library(tidyverse) # tidyverse is a more expansive package that includes both dp
 # package installation should be done in your console, but packages required for your script should be attached at the beginning in the script file with library()
 
 # read in the data 
-L.chl <- read.csv("chl/Data/chl.absorbance.csv") # I think I told yall I use . to avoid spaces and make things R friendly, and that's true, but for file names I actually tend to use - between words because it's easier to read and you can more readily identify the extension (e.g., chl-absorbance.csv). This gets more important as files become more numerous and complex, but much of this is still just personal preference
+L.chl <- read.csv("Data/chl-absorbance.csv") # I think I told yall I use . to avoid spaces and make things R friendly, and that's true, but for file names I actually tend to use - between words because it's easier to read and you can more readily identify the extension (e.g., chl-absorbance.csv). This gets more important as files become more numerous and complex, but much of this is still just personal preference
 # I renamed the above object to be a shorter name and to start with L so we know it's Lainie's two wavelengths 
 
 # R has several types of objects and str() is telling us how the data in this spreadsheet is being interpreted by R
