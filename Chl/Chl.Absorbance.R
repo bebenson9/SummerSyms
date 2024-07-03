@@ -8,6 +8,8 @@ library(tidyverse) # tidyverse is a more expansive package that includes both dp
 # note that you only need quote marks when installing packages, i.e., install.packages("")
 # package installation should be done in your console, but packages required for your script should be attached at the beginning in the script file with library()
 
+library(data.table)
+
 # read in the data 
 L.chl <- read.csv("Data/chl-absorbance.csv") # I think I told yall I use . to avoid spaces and make things R friendly, and that's true, but for file names I actually tend to use - between words because it's easier to read and you can more readily identify the extension (e.g., chl-absorbance.csv). This gets more important as files become more numerous and complex, but much of this is still just personal preference
 # I renamed the above object to be a shorter name and to start with L so we know it's Lainie's two wavelengths 
@@ -37,9 +39,17 @@ str(L.chl)
 # Note - I noticed a typo in the absorbance column header in Lainie's data sheet; you will need to correct that before attempting to merge the data sets
 G.chl <- read.csv("Data/Chl_tables.csv")
 
+Chl.data <- rbind(L.chl,G.chl)
+Chl.data$plate <- as.factor(Chl.data$plate)
+Chl.data$wavelength <- as.factor(Chl.data$wavelength)
+Chl.data$replicate <- as.factor(Chl.data$replicate)
+str(Chl.data)
+
 # separate wavelengths 
 sixfournine <- filter(L.chl,wavelength==649)
 sixsixfive <- filter(L.chl,wavelength==665)
+sixthreetwo <- filter(Chl.data,wavelength==632)
+sixninesix <- filter(Chl.data,wavelength==696)
 
 # Lainie, nice job figuring out how to plot this! However, it's a little hard to interpret at a glance
 # part of the reason it looks a little odd is that plate is being interpreted as a continuous numeric variable, when in reality, it's a factor. There is nothing intrinsically numeric about these plates. We could have called them plate A and plate B. What does it mean for something to be a factor? If you haven't already made plate a factor after looking at str(), go ahead and do so 
@@ -65,3 +75,7 @@ ggplot(sixsixfive)+
 # well, first we need to average our two replicates for each fragment to obtain an average absorbance value for each coral fragment in the plate
 # try setDT (and make sure you add library(data.table) at the top of this script and run that line of code to use the setDT function!)
 # what's next? 
+Chl.absorbance <- setDT(Chl.data)[, list(Chl.absorbance=mean(absorbance)), by=list(coral,plate,wavelength)]
+
+
+                                         
