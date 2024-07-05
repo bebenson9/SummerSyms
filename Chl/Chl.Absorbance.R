@@ -77,5 +77,74 @@ ggplot(sixsixfive)+
 # what's next? 
 Chl.absorbance <- setDT(Chl.data)[, list(Chl.absorbance=mean(absorbance)), by=list(coral,plate,wavelength)]
 
+Chl.absorbance%>%
+  ggplot(aes(x=Chl.absorbance(filter(plate=="1")),y=Chl.absorbance(filter(plate=="2'"))))+
+  geom_point()
 
-                                         
+original <- Chl.absorbance%>%
+  filter(plate=="1")
+redo <- Chl.absorbance%>%
+  filter(plate=="2")
+
+plot(original$Chl.absorbance~redo$Chl.absorbance)
+
+
+# facet_wrap(~wavelength,4,1)
+
+
+# plate1.649$w649 <- plate1.649$Chl.absorbance
+plate1.649 <- Chl.absorbance %>%
+  filter(plate == 1) %>%
+  filter(wavelength == 649)
+ch1.649 <- rename(plate1.649, P1A=Chl.absorbance)
+
+plate1.665 <- Chl.absorbance %>%
+  filter(plate == 1) %>%
+  filter(wavelength == 665)
+ch1.665 <- rename(plate1.665, P1A=Chl.absorbance)
+
+plate1.632 <- Chl.absorbance %>%
+  filter(plate == 1) %>%
+  filter(wavelength == 632)
+ch1.632 <- rename(plate1.632, P1A=Chl.absorbance)
+
+plate1.696 <- Chl.absorbance %>%
+  filter(plate == 1) %>%
+  filter(wavelength == 696)
+ch1.696 <- rename(plate1.696, P1A=Chl.absorbance)
+
+plate1 <- rbind(ch1.649,ch1.665,ch1.632,ch1.696)
+plate1[,plate:=NULL]
+
+# plate 2
+plate2.649 <- Chl.absorbance %>%
+  filter(plate == 2) %>%
+  filter(wavelength == 649)
+ch2.649 <- rename(plate2.649, P2A=Chl.absorbance)
+
+plate2.665 <- Chl.absorbance %>%
+  filter(plate == 2) %>%
+  filter(wavelength == 665)
+ch2.665 <- rename(plate2.665, P2A=Chl.absorbance)
+
+plate2.632 <- Chl.absorbance %>%
+  filter(plate == 2) %>%
+  filter(wavelength == 632)
+ch2.632 <- rename(plate2.632, P2A=Chl.absorbance)
+
+plate2.696 <- Chl.absorbance %>%
+  filter(plate == 2) %>%
+  filter(wavelength == 696)
+ch2.696 <- rename(plate2.696, P2A=Chl.absorbance)
+
+plate2 <- rbind(ch2.649,ch2.665,ch2.632,ch2.696)
+plate2[,plate:=NULL]
+
+
+ # script to make 4 plots by wavelength
+chl <- merge(plate1,plate2,all=TRUE)
+# facet_wrap(~wavelength,4,1)
+ggplot(chl,aes(P1A,P2A))+
+  geom_point()+
+  facet_wrap(~wavelength,4,1,axes="all")
+
