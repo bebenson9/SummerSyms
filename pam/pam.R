@@ -14,7 +14,7 @@ pam$temp <- as.factor(pam$temp)
 
 pam$frag.id <- factor(pam$frag.id, levels=c('A','B','F','G','C','D','E','H'))
 pam$updated.frag.id <- str_sub(pam$frag.id,1,1)
-
+pam$updated.frag.id <- factor(pam$updated.frag.id, levels=c('A','B','F','G','C','D','E','H'))
 
 
 # obtain average values of fvfm for each nubbin (from the 3 technical replicates/measurements per nub) as well as the range of those values and the standard error 
@@ -40,8 +40,8 @@ pam %>%
   geom_point(size=0.8)
   
 pam %>%
-  filter(colony.id == 'HH72') %>%
-  ggplot(aes(x = frag.id, y = fv.fm, color = temp,fill = temp))+
+  filter(colony.id == 'JH66') %>%
+  ggplot(aes(x = updated.frag.id, y = fv.fm, color = temp, fill = temp))+
   geom_point(size=0.8)+
   geom_boxplot()+
   scale_color_aaas()+
