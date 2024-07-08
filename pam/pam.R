@@ -11,14 +11,14 @@ pam <- read.csv('data/pam.csv')
 # change from temp numeric to factor
 pam$temp <- as.factor(pam$temp)
 # change frag id from numeric to factor and reorder the frag.id values so that they group by treatment temperature in plots 
-<<<<<<< HEAD:pam.R
+
 pam$frag.id <- factor(pam$frag.id, levels=c('A','B','F','G','C','D','E','H'))
-=======
-pam$frag.id <- factor(pam$frag.id, levels=c('A','B','F'('G','C','D','E','H'))
->>>>>>> d3322cd13697269f838567253b8f83f6f61ed680:pam/pam.R
+pam$updated.frag.id <- str_sub(pam$frag.id,1,1)
+
+
 
 # obtain average values of fvfm for each nubbin (from the 3 technical replicates/measurements per nub) as well as the range of those values and the standard error 
-fvfm<-setDT(pam)[, list(fvfm=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)), se=(sd(fv.fm)/sqrt(3))), by=list(colony.id, frag.id, temp)]
+fvfm<-setDT(pam)[, list(fvfm=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)), se=(sd(fv.fm)/sqrt(3))), by=list(colony.id, updated.frag.id, temp)]
 fvfm$temp <- as.factor(fvfm$temp)
 
 
@@ -35,12 +35,12 @@ fvfm %>%
 
 # plot individual colonies (all 8 nubs) to see what the variation looks like (ie, are our 3 replicate measurements per nubbin giving us consistent results for that branch?)
 pam %>%
-  filter(colony.id == 'JH01') %>%
-  ggplot(aes(x = frag.id, y = fv.fm, color = temp,fill = temp))+
+  filter(colony.id == 'HH72') %>%
+  ggplot(aes(x = updated.frag.id, y = fv.fm, color = temp,fill = temp))+
   geom_point(size=0.8)
   
 pam %>%
-  filter(colony.id == 'JH02') %>%
+  filter(colony.id == 'HH72') %>%
   ggplot(aes(x = frag.id, y = fv.fm, color = temp,fill = temp))+
   geom_point(size=0.8)+
   geom_boxplot()+
@@ -51,7 +51,7 @@ pam %>%
 
 # PAM by colony stuff 
 pam$colony.id <- factor(pam$colony.id[1:3864])
-fvfm.avg <- setDT(pam)[, list(fvfm.avg=mean(fv.fm),range=(max(fv.fm)-min(fv.fm)),se=(sd(fv.fm)/sqrt(4))), by=list(colony.id,temp)]
+fvfm.avg <- setDT(fvfm)[, list(fvfm.avg=mean(fvfm),range=(max(fvfm)-min(fvfm)),se=(sd(fvfm)/sqrt(4))), by=list(colony.id,temp)]
 
 pam %>%
   filter(colony.id == 'JH01') %>%
