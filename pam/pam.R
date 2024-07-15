@@ -199,8 +199,13 @@ sample.data.fvfm %>%
   xlab("Colony height above ground")+
   ylab("Colony average fv/fm")
 
-# cleaned up the "habitat" column (removed rows with colonies in non-discernable habitats; ex "open/crevice)
-updated.habitat <- sample.data.fvfm%>% filter (habitat %in% c("open", "exposed","sheltered","overhang","crevice"))
+# cleaned up the "habitat" column (replaced non-discernable habitats with "NA"; ex "open/crevice, then make "NA" into "other")
+library(naniar)
+updated.habitat <- sample.data.fvfm %>% 
+  replace_with_na(replace=list(habitat = c("open/overhang","crevice/overhang","open/crevice","sheltered/crevice","open/exposed?","slightly sheltered","sheltered/overhang","sheltered/open","","other")))
+updated.habitat$habitat <- updated.habitat$habitat %>%
+  replace_na("other")
+
 updated.habitat %>%
   ggplot(aes(x = habitat, y = fvfm.avg, color = temp,fill = temp))+
   geom_point(size=0.8)+

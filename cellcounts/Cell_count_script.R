@@ -10,7 +10,7 @@ library(ggridges)
 ####
 
 # Correcting the data and adding a treatment variable
-air.data <- read.csv("Airbrush_data.csv")
+air.data <- read.csv("airbrush-data.csv")
 air.data$treatment <- substr(air.data$coral, 5, 5)
 air.data$aliquot <- as.factor(air.data$aliquot)
 air.data$treatment <- as.factor(air.data$treatment)
@@ -55,19 +55,21 @@ cells.slurry <- unique(cells.slurry)
 cells.slurry$cells.in.slurry = cells.slurry$mean*100*(cells.slurry$slurry.vol/.01)
 cells.slurry$cells.per.ml = cells.slurry$cells.in.slurry/cells.slurry$slurry.vol
 
-# surface area, import retusa wax dipping data
-retusa.wax <- read.csv("retusa-wax-dipping.csv")
+# surface area, import retusa wax dipping data and merge with cell count data
+retusa.wax <- read.csv("retusa-wax.csv")
 retusa.wax <- retusa.wax[,c("coral","surface.area")]
 retusa.sa <- merge(cells.slurry,retusa.wax)
 
 # cells per cm^2
 retusa.sa$cells.per.cm2 <- retusa.sa$cells.in.slurry/retusa.sa$surface.area
+
+# renaming to sort by treatment
 retusa.sa$treatment <- gsub("D", "36", retusa.sa$treatment)
 retusa.sa$treatment <- gsub("E", "36", retusa.sa$treatment)
 retusa.sa$treatment <- gsub("B", "29", retusa.sa$treatment)
 
 retusa.sa %>%
-  ggplot(aes(x = treatment, y = cells.per.cm2, color = treatment,fill = treatment))+
+  ggplot(aes(x = temp, y = cells.per.cm2, color = temp,fill = treatment))+
   geom_point(size=0.8)+
   geom_boxplot()+
   scale_color_aaas()+
@@ -76,17 +78,31 @@ retusa.sa %>%
 
 setDT(retusa.sa)[,list(mean.symbionts.cm2=mean(cells.per.cm2)), by = .(treatment)]
 
+# import fvfm and colony habitat data; filter for retusa only
 retusa.pam <- read.csv("pam-and-habitat.csv")
 retusa.pam <- retusa.pam %>%
   filter(species=="Retusa")
+
+# renaming "treatment" to "temp" to match other dataframe
 colnames(retusa.sa)[colnames(retusa.sa) == "treatment"] <- "temp"
 retusa.sa$colony.id <- str_sub(retusa.sa$coral,1,4)
-retusa.pam.sa.cc <- merge(retusa.pam,retusa.sa,all=TRUE)
+retusa.pam.sa.cc <- merge(retusa.pam,retusa.sa,by = c("temp", "colony.id"))
+retusa.pam.sa.cc$temp <- as.factor(retusa.pam.sa.cc$temp)
 
+# boxplot of retusa symbiont density by habitat and temperature
+# habitats include open, overhang, sheltered, and other (other = ie; open/overhang, other, "slighly sheltered" etc)
 retusa.pam.sa.cc %>%
   ggplot(aes(x = habitat, y = cells.per.cm2, color = temp,fill = temp))+
   geom_point(size=0.8)+
   geom_boxplot()+
+  scale_color_aaas()+
+  scale_fill_aaas(alpha = 0.2)+
+  theme_bw()
+
+# scatter plot of average branch fvfm by symbiont density
+retusa.pam.sa.cc %>%
+  ggplot(aes(x = cells.per.cm2, y = fvfm.avg, color = temp))+
+  geom_point(size=0.8)+
   scale_color_aaas()+
   scale_fill_aaas(alpha = 0.2)+
   theme_bw()
